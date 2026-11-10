@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KAIJU LAB">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>KAIJU LAB · Cotizador</title>
+<style>
+:root{--bg:#101010;--panel:#1b1b1b;--panel2:#242424;--ink:#f4efdf;--muted:#aaa493;--red:#e34235;--line:#38352f;--green:#b6d78b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:760px;margin:auto;padding:20px 16px 42px}.top{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--red);padding:8px 0 16px;margin-bottom:20px}
+.brand{font-weight:950;letter-spacing:.12em;font-size:24px}.brand span{color:var(--red)}.tag{font-size:10px;letter-spacing:.18em;color:var(--muted);margin-top:4px}.mark{border:1px solid var(--red);color:var(--red);font-size:11px;font-weight:800;padding:7px 9px;transform:skew(-7deg)}
+h1{font-size:25px;line-height:1.1;margin:8px 0 5px}h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 20px}.tabs{display:flex;gap:8px;margin:18px 0}.tab{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:12px 8px;border-radius:10px;font-weight:750}.tab.active{background:var(--red);border-color:var(--red);color:white}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}.field{margin:14px 0}.field label{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:7px}.field input{width:100%;background:#101010;border:1px solid var(--line);border-radius:10px;padding:13px;color:var(--ink);font:inherit;font-size:16px;outline:none}.field input:focus{border-color:var(--red)}
+.qtyline{display:flex;align-items:baseline;justify-content:space-between}.qty{font-size:36px;font-weight:900;letter-spacing:-.04em}.range{width:100%;accent-color:var(--red);margin:12px 0}.tier{background:#2a211e;border:1px solid #704036;padding:13px;border-radius:12px;margin-top:12px}.tier small{color:var(--muted);letter-spacing:.12em;font-weight:700}.tier strong{display:block;font-size:28px;margin-top:3px}.tier em{font-style:normal;color:#e9a69d;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:var(--panel2);padding:13px;border-radius:12px}.metric span{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.metric b{font-size:18px}.total{border:1px solid var(--red);background:#211715;padding:16px;border-radius:13px;margin-top:12px}.total span{font-size:11px;color:#e9a69d;letter-spacing:.12em;font-weight:800}.total strong{display:block;font-size:32px;margin-top:4px}.profit{color:var(--green)!important}
+button{cursor:pointer}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.btn{border:0;border-radius:11px;padding:13px 10px;font-weight:800;font-size:14px;background:var(--red);color:white}.btn.secondary{background:#333;color:var(--ink);border:1px solid var(--line)}.btn.full{width:100%;margin-top:10px}
+.hidden{display:none!important}.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}.row:last-child{border:0}.row span{color:var(--muted)}.history-item{background:var(--panel2);border-radius:12px;padding:13px;margin:9px 0}.history-item strong{font-size:16px}.history-item small{display:block;color:var(--muted);margin-top:4px}.history-actions{display:flex;gap:8px;margin-top:9px}.history-actions button{font-size:12px;padding:8px 10px}
+.note{color:var(--muted);font-size:11px;line-height:1.5;margin-top:14px}.empty{color:var(--muted);text-align:center;padding:28px 10px}
+.footer{text-align:center;color:#777366;font-size:10px;letter-spacing:.15em;margin-top:30px}
+@media(min-width:600px){.wrap{padding:30px 24px}.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div><div class="brand">KAIJU<span>LAB</span></div><div class="tag">MERCH · PRINT · CULTURE</div></div><div class="mark">COTIZADOR</div></header>
+<div id="app">
+<h1>Calculadora mayorista</h1><p class="sub">Cotiza pedidos, revisa tu margen y guarda tus ventas.</p>
+<nav class="tabs"><button class="tab active" data-tab="quote">Cotizar</button><button class="tab" data-tab="history">Historial</button><button class="tab" data-tab="settings">Ajustes</button></nav>
+<section id="quote">
+<div class="card">
+<h2>Pedido</h2>
+<div class="qtyline"><label for="qty">Cantidad de poleras</label><div class="qty" id="qtyLabel">30</div></div>
+<input class="range" id="qty" type="range" min="1" max="200" value="30">
+<div class="field"><label for="qtyExact">O ingresa la cantidad exacta</label><input id="qtyExact" type="number" min="1" value="30" inputmode="numeric"></div>
+<div class="tier"><small>PRECIO UNITARIO NETO APLICADO</small><strong id="unitPrice">$10.070</strong><em id="tierLabel">30 o más unidades · más IVA</em></div>
+</div>
+<div class="card">
+<h2>Resumen de cotización</h2>
+<div class="row"><span>Venta neta</span><b id="net">$302.100</b></div>
+<div class="row"><span>IVA (<i id="ivaLabel">19</i>%)</span><b id="tax">$57.399</b></div>
+<div class="total"><span>TOTAL A COBRAR</span><strong id="grand">$359.499</strong></div>
+</div>
+<div class="card">
+<h2>Rentabilidad estimada</h2>
+<div class="grid">
+<div class="metric"><span>Costo unitario</span><b id="costUnit">$5.696</b></div>
+<div class="metric"><span>Costo total</span><b id="costTotal">$170.880</b></div>
+<div class="metric"><span>Ganancia por polera</span><b id="profitUnit">$4.374</b></div>
+<div class="metric"><span>Margen bruto</span><b id="margin">43,4%</b></div>
+</div>
+<div class="total"><span>GANANCIA BRUTA TOTAL</span><strong class="profit" id="profitTotal">$131.220</strong></div>
+<p class="note">Ganancia estimada antes de mano de obra, embalaje, mermas, gastos generales e impuestos. El IVA se calcula sobre la venta neta.</p>
+<div class="actions"><button class="btn" id="save">Guardar pedido</button><button class="btn secondary" id="copy">Copiar cotización</button></div>
+</div>
+</section>
+<section id="history" class="hidden"><div class="card"><h2>Pedidos guardados</h2><div id="historyList" class="empty">Todavía no hay pedidos guardados.</div></div></section>
+<section id="settings" class="hidden">
+<div class="card"><h2>Costos e impuestos</h2>
+<div class="field"><label for="cost">Costo de producción por polera (CLP)</label><input id="cost" type="number" min="0" value="5696" inputmode="numeric"></div>
+<div class="field"><label for="iva">IVA (%)</label><input id="iva" type="number" min="0" value="19" inputmode="decimal"></div>
+</div>
+<div class="card"><h2>Tramos de precios mayoristas</h2>
+<div class="field"><label>1 a 10 unidades · precio neto</label><input id="p1" type="number" value="12570" min="0"></div>
+<div class="field"><label>11 a 29 unidades · precio neto</label><input id="p2" type="number" value="11180" min="0"></div>
+<div class="field"><label>30 o más unidades · precio neto</label><input id="p3" type="number" value="10070" min="0"></div>
+<button class="btn full" id="saveSettings">Guardar ajustes</button>
+<p class="note">Los cambios se guardan en este dispositivo y se aplican a las próximas cotizaciones.</p>
+</div>
+</section>
+</div>
+<div class="footer">KAIJU LAB · INTERNAL SALES TOOL</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>'$'+Math.round(n).toLocaleString('es-CL');
+const defaults={cost:5696,iva:19,p1:12570,p2:11180,p3:10070};
+let settings={...defaults,...JSON.parse(localStorage.getItem('kl_settings')||'{}')};
+let history=JSON.parse(localStorage.getItem('kl_history')||'[]');
+function tier(q){return q>=30?Number(settings.p3):q>=11?Number(settings.p2):Number(settings.p1)}
+function values(){let q=Math.max(1,Math.floor(Number($('qtyExact').value)||1)),u=tier(q),net=q*u,iva=Number(settings.iva)||0,tax=Math.round(net*iva/100),cost=Number(settings.cost)||0,costTotal=q*cost,profit=net-costTotal;return {q,u,net,tax,total:net+tax,cost,costTotal,profit,margin:net?profit/net*100:0,profitUnit:u-cost}}
+function render(){let v=values();$('qty').value=Math.min(200,v.q);$('qtyLabel').textContent=v.q;$('unitPrice').textContent=fmt(v.u);$('tierLabel').textContent=(v.q>=30?'30 o más unidades':v.q>=11?'11 a 29 unidades':'1 a 10 unidades')+' · más IVA';$('net').textContent=fmt(v.net);$('tax').textContent=fmt(v.tax);$('grand').textContent=fmt(v.total);$('ivaLabel').textContent=settings.iva;$('costUnit').textContent=fmt(v.cost);$('costTotal').textContent=fmt(v.costTotal);$('profitUnit').textContent=fmt(v.profitUnit);$('margin').textContent=v.margin.toFixed(1).replace('.',',')+'%';$('profitTotal').textContent=fmt(v.profit)}
+function loadSettings(){for(let k of Object.keys(defaults))$(k).value=settings[k];render()}
+$('qty').addEventListener('input',e=>{$('qtyExact').value=e.target.value;render()});
+$('qtyExact').addEventListener('input',render);
+function switchTab(tab){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));['quote','history','settings'].forEach(id=>$(id).classList.toggle('hidden',id!==tab));if(tab==='history')renderHistory()}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+function quoteText(v){return `KAIJU LAB · COTIZACIÓN\nCantidad: ${v.q} poleras\nPrecio unitario neto: ${fmt(v.u)}\nVenta neta: ${fmt(v.net)}\nIVA (${settings.iva}%): ${fmt(v.tax)}\nTOTAL: ${fmt(v.total)}\nCosto estimado: ${fmt(v.costTotal)}\nGanancia bruta estimada: ${fmt(v.profit)}`}
+$('copy').onclick=async()=>{let v=values();try{await navigator.clipboard.writeText(quoteText(v));$('copy').textContent='¡Copiado!';setTimeout(()=>$('copy').textContent='Copiar cotización',1600)}catch(e){alert(quoteText(v))}};
+$('save').onclick=()=>{let v=values();history.unshift({...v,date:new Date().toLocaleString('es-CL'),id:Date.now()});localStorage.setItem('kl_history',JSON.stringify(history));$('save').textContent='Pedido guardado';setTimeout(()=>$('save').textContent='Guardar pedido',1500)};
+$('saveSettings').onclick=()=>{for(let k of Object.keys(defaults))settings[k]=Math.max(0,Number($(k).value)||0);localStorage.setItem('kl_settings',JSON.stringify(settings));loadSettings();alert('Ajustes guardados.')};
+function renderHistory(){let el=$('historyList');if(!history.length){el.className='empty';el.textContent='Todavía no hay pedidos guardados.';return}el.className='';el.innerHTML='';history.forEach(item=>{let div=document.createElement('div');div.className='history-item';let title=document.createElement('strong');title.textContent=`${item.q} poleras · ${fmt(item.total)}`;let small=document.createElement('small');small.textContent=`${item.date} · Unitario ${fmt(item.u)} · Ganancia ${fmt(item.profit)}`;let actions=document.createElement('div');actions.className='history-actions';let cp=document.createElement('button');cp.className='btn secondary';cp.textContent='Copiar';cp.onclick=()=>navigator.clipboard?.writeText(`KAIJU LAB · PEDIDO\nCantidad: ${item.q}\nPrecio unitario: ${fmt(item.u)}\nTotal: ${fmt(item.total)}\nGanancia estimada: ${fmt(item.profit)}`);let del=document.createElement('button');del.className='btn secondary';del.textContent='Eliminar';del.onclick=()=>{history=history.filter(x=>x.id!==item.id);localStorage.setItem('kl_history',JSON.stringify(history));renderHistory()};actions.append(cp,del);div.append(title,small,actions);el.append(div)})}
+loadSettings();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
